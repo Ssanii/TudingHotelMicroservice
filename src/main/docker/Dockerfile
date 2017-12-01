@@ -1,4 +1,3 @@
-#这是假的
 FROM docker.io/java
 MAINTAINER Chen"huanerding@qq.com"
 ADD hotel_eureka-0.0.1.jar tuding-eureka.jar
