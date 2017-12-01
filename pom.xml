@@ -82,6 +82,9 @@
                 <version>1.0.0</version>
                 <configuration>
                     <imageName>${docker.image.prefix}/${project.artifactId}</imageName><!--指定镜像的名字-->
+                    <forceTags>true</forceTags>
+                    <baseImage>docker.io/java</baseImage>
+                    <entryPoint>["java","-Djava.security.egd=file:/dev/./urandom","-jar","${project.build.finalName}.jar"]</entryPoint>
                     <dockerDirectory>src/main/docker</dockerDirectory><!--指定dockerfile的位置-->
                     <resources><!--指定哪些文件要和dockerfile放在一起-->
                         <resource>
