@@ -88,7 +88,6 @@
                     <dockerDirectory>src/main/docker</dockerDirectory><!--指定dockerfile的位置-->
                     <resources><!--指定哪些文件要和dockerfile放在一起-->
                         <resource>
-                            <tagetPath>/</tagetPath>
                             <director>${project.build.directory}</director>
                             <include>${project.build.finalName}.jar</include>
                         </resource>
