@@ -18,5 +18,3 @@ else
                 docker run -d -p 1000:1000 '$name'
         fi
 fi
-
-
