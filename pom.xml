@@ -5,7 +5,7 @@
 
     <groupId>com.tuding</groupId>
     <artifactId>hotel_eureka</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <name>tuding-eureka</name>
     <packaging>jar</packaging>
     <description>This project for TudingHotelMicroservice Eureka</description>
