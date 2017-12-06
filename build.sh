@@ -27,4 +27,4 @@ else
         fi
 fi
 firewall-cmd --permanent --zone=public --add-port ${main_port}/tcp
-firewall-cmd --reload
+firewall-cmd --reload 
