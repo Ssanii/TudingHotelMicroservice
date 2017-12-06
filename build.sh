@@ -26,5 +26,6 @@ else
                 echo 'container is rebuild now ...'
         fi
 fi
+
 firewall-cmd --permanent --zone=public --add-port ${main_port}/tcp
 firewall-cmd --reload
