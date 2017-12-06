@@ -1,16 +1,17 @@
 #!/bin/bash
 #服务名称
 name="tuding/tuding-zuul"
-port="1001:1001"
+main_port="1001"
+expose_port="1001"
 if [ ! -n "$(docker images ${name} |grep ${name})" ];
 then
         echo 'image is not exisist!'
-        docker run -d -p ${port} ${name} # images is not exisists will run at daemon immediatly
+        docker run -d -p ${main_port}:${expose_port} ${name} # images is not exisists will run at daemon immediatly
 else
         if [ ! -n "$(docker ps -a | grep ${name})" ];
         then
                 echo 'container is not exisist!'
-                docker run -d -p ${port} ${name}
+                docker run -d -p ${main_port}:${expose_port} ${name}
         else
                 echo 'container is exisist,shut down now....'
                 docker stop $(docker ps -a | grep ${name} | awk '{print $1}') #stop the docker container
@@ -21,9 +22,9 @@ else
                 then
                     docker rmi -f  ${expire_image} #del images by name but latest
                 fi
-                docker run -d -p ${port} ${name}
+                docker run -d -p ${main_port}:${expose_port} ${name}
                 echo 'container is rebuild now ...'
         fi
 fi
-firewall-cmd --permanent --zone=public --add-port ${port}/tcp
+firewall-cmd --permanent --zone=public --add-port ${main_port}/tcp
 firewall-cmd --reload
