@@ -1,6 +1,6 @@
 #!/bin/bash
 #服务名称
-name="tuding/tuding-zuul"
+name="tuding/tuding-eureka"
 main_port="1000"
 expose_port="1000"
 if [ ! -n "$(docker images ${name} |grep ${name})" ];
@@ -27,4 +27,4 @@ else
         fi
 fi
 firewall-cmd --permanent --zone=public --add-port ${main_port}/tcp
-firewall-cmd --reload 
+firewall-cmd --reload
