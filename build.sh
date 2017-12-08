@@ -15,7 +15,7 @@ then
             docker rm $(${docker_container} | awk '{print $1}')
     fi
     #删除旧容器，再启动新容器
-    last_images=$(docker images | grep "latest" | awk '{print $3}')
+    last_images=$(docker images | grep "${name}" | grep "latest" | awk '{print $3}')
     old_images=$(docker images | grep -v ${last_images} | awk '{print $3}')
     if [ -n "${old_images}" ];
         then
