@@ -18,11 +18,11 @@ else
                 docker rm $(docker ps -a | grep ${name} | awk '{print $1}') # remove the docker contrainer
                 latest_id=$(docker images | grep ${name} | grep 'latest' | awk '{print $3}') #get the images id which tags eqauls 'latest'
                 expire_image=$(docker images | grep ${name} | grep -v ${latest_id} | awk '{print $3}')
-                if [ ! -n "${expire_image}" ]; #如果还存在过期的镜像则删除
+                if [ -n "${expire_image}" ]; #如果还存在过期的镜像则删除
                 then
                     docker rmi -f  ${expire_image} #del images by name but latest
+                    docker run -d -p ${main_port}:${expose_port} ${name}
                 fi
-                docker run -d -p ${main_port}:${expose_port} ${name}
                 echo 'container is rebuild now ...'
         fi
 fi
