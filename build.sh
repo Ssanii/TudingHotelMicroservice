@@ -21,8 +21,8 @@ else
                 if [ -n "${expire_image}" ]; #如果还存在过期的镜像则删除
                 then
                     docker rmi -f  ${expire_image} #del images by name but latest
+                    docker run -d -p ${main_port}:${expose_port} ${name}
                 fi
-                docker run -d -p ${main_port}:${expose_port} ${name}
                 echo 'container is rebuild now ...'
         fi
 fi
