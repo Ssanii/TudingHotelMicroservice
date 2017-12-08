@@ -3,29 +3,27 @@
 name="tuding/tuding-zuul"
 main_port="1001"
 expose_port="1001"
-if [ ! -n "$(docker images ${name} |grep ${name})" ];
-then
-        echo 'image is not exisist!'
-        docker run -d -p ${main_port}:${expose_port} ${name} # images is not exisists will run at daemon immediatly
-else
-        if [ ! -n "$(docker ps -a | grep ${name})" ];
-        then
-                echo 'container is not exisist!'
-                docker run -d -p ${main_port}:${expose_port} ${name}
-        else
-                echo 'container is exisist,shut down now....'
-                docker stop $(docker ps -a | grep ${name} | awk '{print $1}') #stop the docker container
-                docker rm $(docker ps -a | grep ${name} | awk '{print $1}') # remove the docker contrainer
-                latest_id=$(docker images | grep ${name} | grep 'latest' | awk '{print $3}') #get the images id which tags eqauls 'latest'
-                expire_image=$(docker images | grep ${name} | grep -v ${latest_id} | awk '{print $3}')
-                if [ -n "${expire_image}" ]; #如果还存在过期的镜像则删除
-                then
-                    docker rmi -f  ${expire_image} #del images by name but latest
-                    docker run -d -p ${main_port}:${expose_port} ${name}
-                fi
-                echo 'container is rebuild now ...'
-        fi
-fi
 
+if [ -n "$(docker images | grep ${name})" ];
+then
+    #存在的情况下，要判断是否有启动的容器
+    docker_container=$(docker ps -a | grep ${name})
+    if [ -n "${docker_container}" ];
+        then
+            #容器存在的情况下，先停止容器，然后删除容器
+            docker stop $(${docker_container} | awk '{print $1}')
+            docker rm $(${docker_container} | awk '{print $1}')
+    fi
+    #删除旧容器，再启动新容器
+    last_images=$(docker images | grep "latest" | awk '{print $3}')
+    old_images=$(docker images | grep -v ${last_images} | awk '{print $3}')
+    if [ -n "${old_images}" ];
+        then
+            docker rmi -f ${old_images}
+    fi
+fi
+docker run -d -p ${main_port}:${expose_port} ${name}
+echo 'container start is completed!'
 firewall-cmd --permanent --zone=public --add-port ${main_port}/tcp
 firewall-cmd --reload
+#shell end
