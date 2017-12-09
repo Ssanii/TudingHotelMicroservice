@@ -1,8 +1,6 @@
 #!/bin/bash
 #服务名称
 name="tuding/tuding-zuul"
-main_port="1001"
-expose_port="1001"
 
 if [ -n "$(docker images | grep ${name})" ];
 then
@@ -24,8 +22,9 @@ then
             echo "旧镜像已移除"
     fi
 fi
-docker run -d -p ${main_port}:${expose_port} ${name}
-echo 'container start is completed!'
-firewall-cmd --permanent --zone=public --add-port ${main_port}/tcp
-firewall-cmd --reload
+none_image=$(docker images|grep "none" | awk '{print  $3}')
+if [ -n "${none_image}" ];
+then
+docker rmi -f ${none_image}
+fi
 #shell end
