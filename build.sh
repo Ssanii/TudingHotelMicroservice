@@ -13,13 +13,15 @@ then
             #容器存在的情况下，先停止容器，然后删除容器
             docker stop $(${docker_container} | awk '{print $1}')
             docker rm $(${docker_container} | awk '{print $1}')
+            echo "容器已移除"
     fi
     #删除旧容器，再启动新容器
     last_images=$(docker images | grep "${name}" | grep "latest" | awk '{print $3}')
-    old_images=$(docker images | grep -v ${last_images} | awk '{print $3}')
+    old_images=$(docker images | grep "${name}" | grep -v ${last_images} | awk '{print $3}')
     if [ -n "${old_images}" ];
         then
             docker rmi -f ${old_images}
+            echo "旧镜像已移除"
     fi
 fi
 docker run -d -p ${main_port}:${expose_port} ${name}
