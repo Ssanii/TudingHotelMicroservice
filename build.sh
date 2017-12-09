@@ -4,7 +4,7 @@ name="tuding/tuding-zuul"
 main_port="1001"
 expose_port="1001"
 
-images_id=$(docker images | grep ${name})
+images_id=$(docker images | grep ${name} | grep "latest")
 if [ -n "${images_id}" ];
 then
     #存在的情况下，要判断是否有启动的容器
@@ -17,7 +17,7 @@ then
             echo "容器已移除"
     fi
     #删除旧容器，再启动新容器
-    last_images=$(docker images | grep "${name}" | grep "latest" | awk '{print $3}')
+    last_images=$(${images_id} | awk '{print $3}')
     old_images=$(docker images | grep "${name}" | grep -v ${last_images} | awk '{print $3}')
     if [ -n "${old_images}" ];
         then
@@ -28,8 +28,8 @@ fi
 none_image=$(docker images|grep "none" | awk '{print  $3}')
 if [ -n "${none_image}" ];
 then
-docker stop $(docker ps -a | grep ${none_image} | awk '{print $1}')
-docker rm $(docker ps -a | grep ${none_image} | awk '{print $1}')
+docker stop $(docker ps -a | grep "${none_image}" | awk '{print $1}')
+docker rm $(docker ps -a | grep "${none_image}" | awk '{print $1}')
 docker rmi -f ${none_image}
 fi
 
