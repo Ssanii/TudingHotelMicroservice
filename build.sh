@@ -1,11 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #服务名称
 name="tuding/tuding-zuul"
+main_port="1001"
+expose_port="1001"
 
-if [ -n "$(docker images | grep ${name})" ];
+images_id=$(docker images | grep ${name})
+if [ -n "${images_id}" ];
 then
     #存在的情况下，要判断是否有启动的容器
-    docker_container=$(docker ps -a | grep ${name})
+    docker_container=$(docker ps -a | grep ${images_id})
     if [ -n "${docker_container}" ];
         then
             #容器存在的情况下，先停止容器，然后删除容器
@@ -25,6 +28,13 @@ fi
 none_image=$(docker images|grep "none" | awk '{print  $3}')
 if [ -n "${none_image}" ];
 then
+docker stop $(docker ps -a | grep ${none_image} | awk '{print $1}')
+docker rm $(docker ps -a | grep ${none_image} | awk '{print $1}')
 docker rmi -f ${none_image}
 fi
+
+docker run -d -p ${main_port}:${expose_port} ${name}
+echo 'container start is completed!'
+firewall-cmd --permanent --zone=public --add-port=${main_port}/tcp
+firewall-cmd --reload
 #shell end
